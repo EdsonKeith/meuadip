@@ -1,0 +1,323 @@
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Painel do Associado - ADIP</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Mobile-First Responsive Modifications */
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .dashboard-main, .sidebar {
+                width: 100%;
+                margin-bottom: 1rem;
+                padding: 1rem;
+            }
+
+            .welcome-section {
+                padding: 1rem;
+            }
+
+            .profile-edit-section {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .profile-picture-upload {
+                margin-bottom: 1rem;
+            }
+
+            .events-section, .resources-section, .discussions-section {
+                margin-bottom: 1rem;
+            }
+
+            .chat-container {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                max-height: 80vh;
+                border-radius: 10px 10px 0 0;
+            }
+
+            .chat-messages {
+                max-height: 50vh;
+            }
+
+            .btn-block {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+
+            .profile-details-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .nav-menu {
+                padding: 0.5rem;
+            }
+        }
+
+        /* Touch-Friendly Modifications */
+        input, select, textarea, button {
+            touch-action: manipulation;
+            min-height: 44px;
+            padding: 0.75rem;
+        }
+
+        .btn {
+            min-width: 100px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="nav-container">
+                <div class="logo-hamburger">
+                    <div class="logo-container">
+                        <img src="Logotipo Monograma Minimalista Cinza e Preto_20250214_185236_0000.png" alt="Logo ADIP" class="nav-logo">
+                        <span class="logo-text">Apoio ao Imigrante</span>
+                    </div>
+                    <button class="hamburger" aria-label="Menu de Navegação">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Início</a></li>
+                    <li><a href="index.html#eventos">Eventos</a></li>
+                    <li><a href="index.html#oportunidades">Oportunidades</a></li>
+                    <li><a href="sobre.html">Sobre a ADIP</a></li>
+                    <li>
+                        <a href="registro.html" class="btn btn-associate">
+                            Junte-se a Nós
+                        </a>
+                    </li>
+                    <li>
+                        <a href="admin-login.html" class="btn btn-admin">
+                            Área Administrativa
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="associate-dashboard">
+            <div class="container">
+                <div class="dashboard-grid">
+                    <div class="dashboard-main">
+                        <div class="welcome-section">
+                            <h1 id="welcomeMessage">Bem-vindo, <span id="associadoNome"></span></h1>
+                            <p id="associadoInfo"></p>
+                        </div>
+
+                        <div class="events-section">
+                            <h2>Próximos Eventos</h2>
+                            <div id="upcomingEventsList" class="events-grid">
+                                <!-- Eventos serão carregados dinamicamente -->
+                            </div>
+                        </div>
+
+                        <div class="resources-section">
+                            <h2>Recursos Úteis</h2>
+                            <div id="resourcesList">
+                                <div class="resource-card">
+                                    <span>Guia de Imigração</span>
+                                    <a href="#" class="btn btn-secondary btn-small">Download</a>
+                                </div>
+                                <div class="resource-card">
+                                    <span>Regulamentos ADIP</span>
+                                    <a href="#" class="btn btn-secondary btn-small">Visualizar</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="discussions-section">
+                            <h2>Discussões da Comunidade</h2>
+                            <div id="discussionsList">
+                                <!-- Discussões serão carregadas dinamicamente -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sidebar">
+                        <div class="profile-section">
+                            <h3>Meu Perfil</h3>
+                            <div id="profileDetails"></div>
+                            <button id="editProfileBtn" class="btn btn-primary btn-block">Editar Perfil</button>
+                        </div>
+
+                        <div class="chat-section" id="communityChat">
+                            <h3>Chat da Comunidade</h3>
+                            <div id="chatMessages"></div>
+                            <div class="chat-input">
+                                <input type="text" id="chatInput" placeholder="Escreva sua mensagem...">
+                                <button id="sendChatBtn" class="btn btn-secondary">Enviar</button>
+                            </div>
+                        </div>
+
+                        <div class="support-section">
+                            <h3>Suporte</h3>
+                            <button id="contactSupportBtn" class="btn btn-tertiary btn-block">Contactar Suporte</button>
+                        </div>
+
+                        <div class="account-actions">
+                            <h3>Definições da Conta</h3>
+                            <button id="changePasswordBtn" class="btn btn-secondary btn-block">Alterar Palavra-Passe</button>
+                            <button id="logoutBtn" class="btn btn-tertiary btn-block">Terminar Sessão</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chat Modal -->
+        <div id="chatModal" class="modal">
+            <div class="chat-container">
+                <div class="chat-header">
+                    <h3>Comunidade ADIP</h3>
+                    <div class="chat-actions">
+                        <input 
+                            type="text" 
+                            id="chatSearchInput" 
+                            placeholder="Pesquisar conversas..."
+                        >
+                        <span id="chatNotificationBadge" class="notification-badge">0</span>
+                        <button class="close-chat btn btn-secondary">×</button>
+                    </div>
+                </div>
+                
+                <div class="conversations-section">
+                    <div id="conversationsList" class="conversations-list">
+                        <!-- Conversations will be dynamically added here -->
+                    </div>
+                </div>
+
+                <div class="chat-messages-section">
+                    <div id="chatMessages" class="chat-messages">
+                        <!-- Messages will be dynamically added here -->
+                    </div>
+                    
+                    <div class="chat-input-container">
+                        <input 
+                            type="file" 
+                            id="chatFileInput" 
+                            accept="image/*,application/pdf,.doc,.docx"
+                            style="display: none;"
+                        >
+                        <button id="attachFileBtn" class="btn btn-secondary">
+                            📎 Anexar
+                        </button>
+                        <input 
+                            type="text" 
+                            id="chatMessageInput" 
+                            placeholder="Escreva sua mensagem..."
+                        >
+                        <button id="sendChatMessage" class="btn btn-primary">
+                            Enviar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Edit Modal -->
+        <div id="profileEditModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h2>Editar Perfil</h2>
+                <form id="profileEditForm" class="profile-edit-section">
+                    <div class="profile-picture-upload">
+                        <img id="profilePicturePreview" src="" alt="Foto de Perfil">
+                        <input type="file" id="profilePicture" accept="image/*">
+                    </div>
+                    <div class="profile-details">
+                        <div class="form-group">
+                            <label for="editName">Nome Completo</label>
+                            <input type="text" id="editName" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editBio">Biografia</label>
+                            <textarea id="editBio" name="bio" maxlength="300"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="editContact">Contato</label>
+                            <input type="tel" id="editContact" name="contact">
+                        </div>
+                        <fieldset>
+                            <legend>Configurações de Privacidade</legend>
+                            <div class="privacy-settings">
+                                <label>
+                                    <input type="checkbox" name="profileVisibility"> 
+                                    Perfil Público
+                                </label>
+                                <label>
+                                    <input type="checkbox" name="messagePermission"> 
+                                    Permitir Mensagens de Todos
+                                </label>
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <legend>Preferências de Notificação</legend>
+                            <div class="notification-settings">
+                                <label>
+                                    <input type="checkbox" name="emailNotifications"> 
+                                    Receber Notificações por Email
+                                </label>
+                                <label>
+                                    <input type="checkbox" name="smsNotifications"> 
+                                    Receber Notificações por SMS
+                                </label>
+                            </div>
+                        </fieldset>
+                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="contact-info">
+                    <img src="Cartão de Identificação a Amarelo e Preto com Ilustração para Cartão de Sóc_20250209_150956_0000 (3).png" alt="Logo ADIP" class="footer-logo">
+                    <h4>Contacte-nos</h4>
+                    <p> +351 926 479 393</p>
+                    <p> R. Prof. Egas Moniz 24A, 2845-340 Amora</p>
+                    <p> associacaoadep@hotmail.com</p>
+                </div>
+                <div class="footer-section">
+                    <p>&copy; 2025 ADIP - Todos os direitos reservados</p>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/associacaoadep" target="_blank">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm3 8h-1.35c-.538 0-.65.221-.65.778v1.222h2l-.209 2h-1.791v7h-3v-7h-2v-2h2v-2.308c0-1.769.931-2.692 3.029-2.692h1.971v3z"/>
+                            </svg>
+                        </a>
+                        <a href="https://www.instagram.com/associacaoadep" target="_blank">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.148 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.148-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.948-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.441 1.441 1.441c.795 0 1.439-.646 1.439-1.441s-.644-1.44-1.439-1.44z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module" src="associate-dashboard.js"></script>
+</body>
+</html>

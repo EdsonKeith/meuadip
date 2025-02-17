@@ -1,0 +1,142 @@
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Login de Associados - ADIP</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        .login-error {
+            background-color: #ffebee;
+            color: #d32f2f;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="nav-container">
+                <div class="logo-hamburger">
+                    <div class="logo-container">
+                        <img src="Logotipo Monograma Minimalista Cinza e Preto_20250214_185236_0000.png" alt="Logo ADIP" class="nav-logo">
+                        <span class="logo-text">Apoio ao Imigrante</span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="associate-login">
+            <div class="container">
+                <h2>Login de Associados</h2>
+                
+                <div id="loginErrorMessage" class="login-error"></div>
+                
+                <form id="associateLoginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">E-mail</label>
+                        <input 
+                            type="email" 
+                            id="loginEmail" 
+                            name="email" 
+                            required
+                            placeholder="Insira seu e-mail"
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Palavra-passe</label>
+                        <input 
+                            type="password" 
+                            id="loginPassword" 
+                            name="password" 
+                            required
+                            placeholder="Insira sua palavra-passe"
+                        >
+                    </div>
+                    <div class="form-actions">
+                        <button 
+                            type="submit" 
+                            class="btn btn-primary btn-submit"
+                        >
+                            Entrar
+                        </button>
+                    </div>
+                </form>
+
+                <div class="signup-prompt">
+                    <p>Não tem uma conta? <a href="registro.html" class="btn btn-secondary">Cadastre-se</a></p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="contact-info">
+                    <img src="Cartão de Identificação a Amarelo e Preto com Ilustração para Cartão de Sóc_20250209_150956_0000 (3).png" alt="Logo ADIP" class="footer-logo">
+                    <h4>Contacte-nos</h4>
+                    <p> +351 926 479 393</p>
+                    <p> R. Prof. Egas Moniz 24A, 2845-340 Amora</p>
+                    <p> associacaoadep@hotmail.com</p>
+                </div>
+                <div class="footer-section">
+                    <p>&copy; 2025 ADIP - Todos os direitos reservados</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module">
+        import { 
+            getAuth, 
+            signInWithEmailAndPassword 
+        } from 'https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js';
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js';
+
+        // Firebase configuration (replace with your actual config)
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        document.getElementById('associateLoginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const emailInput = document.getElementById('loginEmail');
+            const passwordInput = document.getElementById('loginPassword');
+            const loginErrorMessage = document.getElementById('loginErrorMessage');
+
+            const email = emailInput.value;
+            const password = passwordInput.value;
+
+            try {
+                // Always allow login for testing
+                localStorage.setItem('associateToken', 'test-login-token');
+                localStorage.setItem('associateData', JSON.stringify({
+                    nome: 'Utilizador de Teste',
+                    email: email,
+                    status: 'Aprovado'
+                }));
+
+                // Redirect to associate dashboard
+                window.location.href = 'associate-dashboard.html';
+            } catch (error) {
+                console.error('Login error:', error);
+                loginErrorMessage.style.display = 'block';
+                loginErrorMessage.textContent = 'Erro de conexão. Por favor, tente novamente.';
+            }
+        });
+    </script>
+</body>
+</html>
